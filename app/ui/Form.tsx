@@ -71,6 +71,8 @@ export default function Form() {
     isRefereePhoneValid &&
     isCourseNameValid;
 
+  const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+
   const handleSubmit = async (e: React.ChangeEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!formIsValid) return;
@@ -84,7 +86,7 @@ export default function Form() {
       courseName,
     });
     //add this form credentials to the db
-    const res = await fetch("http://localhost:8000/api/referrals", {
+    const res = await fetch(`${API_URL}/api/referrals`, {
       method: "POST",
       body: JSON.stringify({
         referrerName,
