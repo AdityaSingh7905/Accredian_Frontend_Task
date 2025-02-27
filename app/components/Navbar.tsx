@@ -10,21 +10,20 @@ const Navbar = () => {
   const [screenSize, setScreenSize] = useState<number>(window.innerWidth);
   const [navbarWidth, setNavbarWidth] = useState(1200); // Default for large screens
 
-  const updateNavbarWidth = () => {
-    const screenWidth = window.innerWidth;
-    setScreenSize(screenWidth);
-    if (screenWidth >= 1280) {
-      setNavbarWidth(1200); // Extra-large screens
-    } else if (screenWidth >= 1024) {
-      setNavbarWidth(1000); // Large screens
-    } else if (screenWidth >= 768) {
-      setNavbarWidth(760);
-    } else {
-      setNavbarWidth(screenWidth - 40);
-    }
-  };
-
   useEffect(() => {
+    const updateNavbarWidth = () => {
+      const screenWidth = window.innerWidth;
+      setScreenSize(screenWidth);
+      if (screenWidth >= 1280) {
+        setNavbarWidth(1200); // Extra-large screens
+      } else if (screenWidth >= 1024) {
+        setNavbarWidth(1000); // Large screens
+      } else if (screenWidth >= 768) {
+        setNavbarWidth(760);
+      } else {
+        setNavbarWidth(screenWidth - 40);
+      }
+    };
     updateNavbarWidth();
     window.addEventListener("resize", updateNavbarWidth);
     return () => window.removeEventListener("resize", updateNavbarWidth);
