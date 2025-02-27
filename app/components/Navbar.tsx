@@ -7,7 +7,7 @@ import Link from "next/link";
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [screenSize, setScreenSize] = useState<number>(window.innerWidth);
+  const [screenSize, setScreenSize] = useState<number>(0);
   const [navbarWidth, setNavbarWidth] = useState(1200); // Default for large screens
 
   useEffect(() => {
