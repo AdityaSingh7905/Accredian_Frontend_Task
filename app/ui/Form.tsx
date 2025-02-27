@@ -1,4 +1,4 @@
-// components/ReferralModal.js
+"use client";
 import React, { useContext, useState } from "react";
 import { ReferralContext } from "../utils/ReferralContextProvider";
 
