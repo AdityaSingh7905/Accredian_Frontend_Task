@@ -72,6 +72,7 @@ export default function Form() {
     isCourseNameValid;
 
   const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+  // const API_URL = "http://localhost:8000";
 
   const handleSubmit = async (e: React.ChangeEvent<HTMLFormElement>) => {
     e.preventDefault();
