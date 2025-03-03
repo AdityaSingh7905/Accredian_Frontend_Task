@@ -16,6 +16,7 @@ export default function Form() {
   const [refereeEmail, setRefereeEmail] = useState("");
   const [refereePhone, setRefereePhone] = useState("");
   const [courseName, setCourseName] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const validateString = (name: string) => {
     if (name.trim().length > 0) return true;
@@ -77,19 +78,9 @@ export default function Form() {
   const handleSubmit = async (e: React.ChangeEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!formIsValid) return;
-    console.log({
-      referrerName,
-      referrerEmail,
-      referrerPhone,
-      refereeName,
-      refereeEmail,
-      refereePhone,
-      courseName,
-    });
-    //add this form credentials to the db
-    const res = await fetch(`${API_URL}/api/referrals`, {
-      method: "POST",
-      body: JSON.stringify({
+    setIsLoading(true);
+    try {
+      console.log({
         referrerName,
         referrerEmail,
         referrerPhone,
@@ -97,17 +88,34 @@ export default function Form() {
         refereeEmail,
         refereePhone,
         courseName,
-      }),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-    if (!res.ok) {
-      throw new Error("Failed to save referralData!!");
+      });
+      //add this form credentials to the db
+      const res = await fetch(`${API_URL}/api/referrals`, {
+        method: "POST",
+        body: JSON.stringify({
+          referrerName,
+          referrerEmail,
+          referrerPhone,
+          refereeName,
+          refereeEmail,
+          refereePhone,
+          courseName,
+        }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      if (!res.ok) {
+        throw new Error("Failed to save referralData!!");
+      }
+      const data = await res.json();
+      console.log(data);
+      referralCtx.closeModal(); // Close the modal after submission
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setIsLoading(false);
     }
-    const data = await res.json();
-    console.log(data);
-    referralCtx.closeModal(); // Close the modal after submission
   };
 
   if (!referralCtx.isModalOpen) return null;
@@ -116,6 +124,12 @@ export default function Form() {
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-100">
       <div className="bg-white rounded-lg shadow-lg w-full max-w-lg max-h-screen overflow-y-auto p-6">
         <h2 className="text-xl mx-auto font-semibold">Referral Form</h2>
+        {/* Show loading overlay */}
+        {isLoading && (
+          <div className="absolute inset-0 flex items-center justify-center bg-white bg-opacity-75">
+            <div className="animate-spin rounded-full h-10 w-10 border-t-4 border-blue-500"></div>
+          </div>
+        )}
         <form onSubmit={handleSubmit}>
           <h3 className="font-bold">Referrer Details</h3>
           <div className="mb-4">
@@ -246,20 +260,22 @@ export default function Form() {
               <p className="text-red-500">Please enter valid course.</p>
             )}
           </div>
-          <button
-            type="submit"
-            disabled={!formIsValid}
-            className="bg-blue-600 text-white px-4 py-2 rounded disabled:bg-gray-300 disabled:hover:bg-gray-400"
-          >
-            Submit Referral
-          </button>
+          <div className="flex justify-between items-stretch w-full">
+            <button
+              onClick={() => referralCtx.closeModal()}
+              className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 h-full"
+            >
+              Close
+            </button>
+            <button
+              type="submit"
+              disabled={!formIsValid}
+              className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 disabled:bg-gray-300 disabled:hover:bg-gray-400 h-full"
+            >
+              Submit Referral
+            </button>
+          </div>
         </form>
-        <button
-          onClick={() => referralCtx.closeModal()}
-          className="mt-4 text-blue-600 underline"
-        >
-          Close
-        </button>
       </div>
     </div>
   );
